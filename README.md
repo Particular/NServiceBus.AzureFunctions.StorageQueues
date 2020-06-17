@@ -1,6 +1,6 @@
-# NServiceBus.AzureFunctions
+# NServiceBus.AzureFunctions.StorageQueues
 
-Process messages in AzureFunctions using the NServiceBus message pipeline.
+Process messages in AzureFunctions using the Azure Storage Queues trigger and the NServiceBus message pipeline.
 
 ## Running tests locally
 
