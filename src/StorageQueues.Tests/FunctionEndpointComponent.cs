@@ -55,7 +55,6 @@
                 endpoint = new TestableFunctionEndpoint(context =>
                 {
                     var functionEndpointConfiguration = new StorageQueueTriggeredEndpointConfiguration(Name);
-                    functionEndpointConfiguration.UseSerialization<NewtonsoftSerializer>();
 
                     var endpointConfiguration = functionEndpointConfiguration.AdvancedConfiguration;
 

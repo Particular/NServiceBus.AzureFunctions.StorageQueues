@@ -8,9 +8,9 @@
     using AzureFunctions;
     using AzureFunctions.StorageQueues;
     using Extensibility;
+    using global::Newtonsoft.Json;
     using Microsoft.Extensions.Logging;
     using Microsoft.WindowsAzure.Storage.Queue;
-    using Newtonsoft.Json;
     using Transport;
     using ExecutionContext = Microsoft.Azure.WebJobs.ExecutionContext;
 
@@ -83,6 +83,6 @@
             }
         }
 
-        static readonly Newtonsoft.Json.JsonSerializer JsonSerializer = new Newtonsoft.Json.JsonSerializer();
+        static readonly global::Newtonsoft.Json.JsonSerializer JsonSerializer = new global::Newtonsoft.Json.JsonSerializer();
     }
 }
