@@ -37,6 +37,8 @@
             recoverability.Delayed(settings => settings.NumberOfRetries(0));
 
             Transport.DelayedDelivery().DisableDelayedDelivery();
+
+            EndpointConfiguration.UseSerialization<NewtonsoftSerializer>();
         }
 
         /// <summary>
