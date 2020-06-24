@@ -31,10 +31,17 @@
             {
                 var configuration = new StorageQueueTriggeredEndpointConfiguration("assemblyTest");
                 configuration.UseSerialization<XmlSerializer>();
+                configuration.Transport.DisablePublishing();
+                configuration.EndpointConfiguration.UsePersistence<InMemoryPersistence>();
+
                 settings = configuration.AdvancedConfiguration.GetSettings();
                 return configuration;
-            });
-            endpoint.AssemblyDirectoryResolver = _ => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ExternalHandlers");
+
+            })
+            {
+                AssemblyDirectoryResolver = _ => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ExternalHandlers")
+            };
+
 
             // we need to process an actual message to have the endpoint being created
             await endpoint.Process(GenerateMessage(), new ExecutionContext());

@@ -27,7 +27,7 @@
         {
             public ReceivingEndpoint()
             {
-                EndpointSetup<DefaultEndpoint>();
+                EndpointSetup<DefaultEndpoint>(endpointConfiguration => endpointConfiguration.UsePersistence<InMemoryPersistence>());
             }
 
             class OutgoingMessageHandler : IHandleMessages<FollowupMessage>
