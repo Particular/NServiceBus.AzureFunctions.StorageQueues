@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.AzureFunctions
+﻿namespace NServiceBus.AzureFunctions.StorageQueues
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,7 @@
     using Settings;
     using Transport;
 
-    class ServerlessTransportInfrastructure<TBaseInfrastructure> : TransportInfrastructure
+    class ServerlessTransportInfrastructure : TransportInfrastructure
     {
         public ServerlessTransportInfrastructure(TransportInfrastructure baseTransportInfrastructure,
             SettingsHolder settings)

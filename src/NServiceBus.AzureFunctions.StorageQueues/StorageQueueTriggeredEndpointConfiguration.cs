@@ -2,7 +2,7 @@
 {
     using Logging;
     using System;
-    using AzureFunctions;
+    using AzureFunctions.StorageQueues;
     using Microsoft.Azure.WebJobs;
 
     /// <summary>

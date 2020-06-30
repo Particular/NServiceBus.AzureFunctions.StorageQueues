@@ -5,7 +5,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Azure.Transports.WindowsAzureStorageQueues;
-    using AzureFunctions;
     using AzureFunctions.StorageQueues;
     using Extensibility;
     using global::Newtonsoft.Json;
