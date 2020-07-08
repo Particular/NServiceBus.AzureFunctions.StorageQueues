@@ -13,5 +13,9 @@
     <PackageReference Include="Particular.CodeRules" Version="0.3.0" PrivateAssets="All" />
     <PackageReference Include="Particular.Packaging" Version="0.8.0" PrivateAssets="All" />
   </ItemGroup>
-  
+
+  <ItemGroup Label="Required to force NServiceBus 7.2 and later to be able to disable publishing. ASQ transport is configured to use Core [7.1.6, 8) but NuGet doesn't resolve the latest. Remove when ASQ is updated">
+    <PackageReference Include="NServiceBus" Version="[7.3.0, 8)" />
+  </ItemGroup>
+
 </Project>
