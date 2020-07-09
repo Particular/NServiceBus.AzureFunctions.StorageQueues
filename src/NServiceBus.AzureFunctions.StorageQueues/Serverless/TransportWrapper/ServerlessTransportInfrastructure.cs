@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Routing;
     using Settings;
     using Transport;
@@ -33,6 +34,16 @@
         public override TransportSendInfrastructure ConfigureSendInfrastructure()
         {
             return baseTransportInfrastructure.ConfigureSendInfrastructure();
+        }
+
+        public override Task Start()
+        {
+            return baseTransportInfrastructure.Start();
+        }
+
+        public override Task Stop()
+        {
+            return baseTransportInfrastructure.Stop();
         }
 
         public override TransportSubscriptionInfrastructure ConfigureSubscriptionInfrastructure()
