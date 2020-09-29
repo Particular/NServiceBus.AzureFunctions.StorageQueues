@@ -41,7 +41,7 @@
 
         public IList<object> Messages { get; } = new List<object>();
 
-        public Action<StorageQueueTriggeredEndpointConfiguration> CustomizeConfiguration { set; private get; } = (_ => { });
+        public Action<StorageQueueTriggeredEndpointConfiguration> CustomizeConfiguration { private get; set; } = (_ => { });
 
 
         class FunctionRunner : ComponentRunner
