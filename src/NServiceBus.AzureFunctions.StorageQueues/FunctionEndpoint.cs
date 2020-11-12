@@ -22,9 +22,25 @@
         /// <summary>
         /// Create a new endpoint hosting in Azure Function.
         /// </summary>
-        public FunctionEndpoint(Func<FunctionExecutionContext, StorageQueueTriggeredEndpointConfiguration> configurationFactory) : base(configurationFactory)
+        public FunctionEndpoint(Func<FunctionExecutionContext, StorageQueueTriggeredEndpointConfiguration> configurationFactory)
         {
+            endpointFactory = executionContext =>
+            {
+                LoadAssemblies(AssemblyDirectoryResolver(executionContext));
+
+                configuration = configurationFactory(executionContext);
+                return Endpoint.Start(configuration.EndpointConfiguration);
+            };
         }
+
+        // This ctor is used for the FunctionsHostBuilder scenario where the endpoint is created already during configuration time using the function host's container.
+        internal FunctionEndpoint(IStartableEndpointWithExternallyManagedContainer externallyManagedContainerEndpoint,
+            StorageQueueTriggeredEndpointConfiguration configuration, IServiceProvider serviceProvider)
+        {
+            this.configuration = configuration;
+            endpointFactory = _ => externallyManagedContainerEndpoint.Start(serviceProvider);
+        }
+
 
         /// <summary>
         /// Processes a message received from an AzureStorageQueue trigger using the NServiceBus message pipeline.
@@ -44,9 +60,11 @@
             var messageContext = CreateMessageContext(wrapper);
             var functionExecutionContext = new FunctionExecutionContext(executionContext, functionsLogger);
 
+            await InitializeEndpointIfNecessary(functionExecutionContext).ConfigureAwait(false);
+
             try
             {
-                await Process(messageContext, functionExecutionContext).ConfigureAwait(false);
+                await pipeline.PushMessage(messageContext).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -58,8 +76,7 @@
                     new TransportTransaction(),
                     message.DequeueCount);
 
-                var errorHandleResult = await ProcessFailedMessage(errorContext, functionExecutionContext)
-                    .ConfigureAwait(false);
+                var errorHandleResult = await pipeline.PushFailedMessage(errorContext).ConfigureAwait(false);
 
                 if (errorHandleResult == ErrorHandleResult.Handled)
                 {
