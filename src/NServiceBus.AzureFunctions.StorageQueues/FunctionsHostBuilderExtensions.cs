@@ -31,7 +31,7 @@ namespace NServiceBus
             IServiceCollection serviceCollection,
             string appDirectory)
         {
-            ServerlessEndpoint<StorageQueueTriggeredEndpointConfiguration>.LoadAssemblies(appDirectory);
+            FunctionEndpoint.LoadAssemblies(appDirectory);
 
             var startableEndpoint = EndpointWithExternallyManagedServiceProvider.Create(
                 configuration.EndpointConfiguration,
