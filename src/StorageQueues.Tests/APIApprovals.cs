@@ -1,4 +1,4 @@
-﻿namespace StorageQueues.Tests
+﻿namespace StorageQueues.ApprovalTests
 {
     using NServiceBus;
     using NUnit.Framework;
