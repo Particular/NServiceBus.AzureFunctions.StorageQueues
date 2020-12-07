@@ -11,9 +11,9 @@
         [Test]
         public void Approve()
         {
-            var publicApi = ApiGenerator.GeneratePublicApi(typeof(StorageQueueTriggeredEndpointConfiguration).Assembly, new ApiGeneratorOptions
+            var publicApi = typeof(StorageQueueTriggeredEndpointConfiguration).Assembly.GeneratePublicApi(new ApiGeneratorOptions
             {
-                ExcludeAttributes = new[] {"System.Runtime.Versioning.TargetFrameworkAttribute"}
+                ExcludeAttributes = new[] { "System.Runtime.Versioning.TargetFrameworkAttribute", "System.Reflection.AssemblyMetadataAttribute" }
             });
             Approver.Verify(publicApi);
         }
