@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-using NServiceBus.AzureFunctions.StorageQueues;
-
-namespace NServiceBus
+﻿namespace NServiceBus
 {
+    using System;
+    using System.IO;
+    using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection;
+
     /// <summary>
     /// Provides extension methods to configure a <see cref="FunctionEndpoint"/> using <see cref="IFunctionsHostBuilder"/>.
     /// </summary>
@@ -23,7 +22,9 @@ namespace NServiceBus
             var endpointFactory = Configure(serviceBusTriggeredEndpointConfiguration, functionsHostBuilder.Services,
                 Path.Combine(functionsHostBuilder.GetContext().ApplicationRootPath, "bin"));
 
+            // for backward compatibility
             functionsHostBuilder.Services.AddSingleton(endpointFactory);
+            functionsHostBuilder.Services.AddSingleton<IFunctionEndpoint>(sp => sp.GetRequiredService<FunctionEndpoint>());
         }
 
         internal static Func<IServiceProvider, FunctionEndpoint> Configure(
