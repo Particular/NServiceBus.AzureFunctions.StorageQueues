@@ -112,7 +112,7 @@
                     if (pipeline == null)
                     {
                         LogManager.GetLogger("Previews").Info("NServiceBus.AzureFunctions.ServiceBus is a preview package. Preview packages are licensed separately from the rest of the Particular Software platform and have different support guarantees. You can view the license at https://particular.net/eula/previews and the support policy at https://docs.particular.net/previews/support-policy. Customer adoption drives whether NServiceBus.AzureFunctions.ServiceBus will be incorporated into the Particular Software platform. Let us know you are using it, if you haven't already, by emailing us at support@particular.net.");
-                        await endpointFactory(executionContext).ConfigureAwait(false);
+                        endpoint = await endpointFactory(executionContext).ConfigureAwait(false);
 
                         pipeline = configuration.PipelineInvoker;
                     }
@@ -122,6 +122,107 @@
                     semaphoreLock.Release();
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public async Task Send(object message, SendOptions options, ExecutionContext executionContext, ILogger functionsLogger = null)
+        {
+            await InitializeEndpointUsedOutsideHandlerIfNecessary(executionContext, functionsLogger).ConfigureAwait(false);
+
+            await endpoint.Send(message, options).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public Task Send(object message, ExecutionContext executionContext, ILogger functionsLogger = null)
+        {
+            return Send(message, new SendOptions(), executionContext, functionsLogger);
+        }
+
+        /// <inheritdoc />
+        public async Task Send<T>(Action<T> messageConstructor, SendOptions options, ExecutionContext executionContext, ILogger functionsLogger = null)
+        {
+            await InitializeEndpointUsedOutsideHandlerIfNecessary(executionContext, functionsLogger).ConfigureAwait(false);
+
+            await endpoint.Send(messageConstructor, options).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public Task Send<T>(Action<T> messageConstructor, ExecutionContext executionContext, ILogger functionsLogger = null)
+        {
+            return Send(messageConstructor, new SendOptions(), executionContext, functionsLogger);
+        }
+
+        /// <inheritdoc />
+        public async Task Publish(object message, PublishOptions options, ExecutionContext executionContext, ILogger functionsLogger = null)
+        {
+            await InitializeEndpointUsedOutsideHandlerIfNecessary(executionContext, functionsLogger).ConfigureAwait(false);
+
+            await endpoint.Publish(message, options).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task Publish<T>(Action<T> messageConstructor, PublishOptions options, ExecutionContext executionContext, ILogger functionsLogger = null)
+        {
+            await InitializeEndpointUsedOutsideHandlerIfNecessary(executionContext, functionsLogger).ConfigureAwait(false);
+
+            await endpoint.Publish(messageConstructor, options).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task Publish(object message, ExecutionContext executionContext, ILogger functionsLogger = null)
+        {
+            await InitializeEndpointUsedOutsideHandlerIfNecessary(executionContext, functionsLogger).ConfigureAwait(false);
+
+            await endpoint.Publish(message).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task Publish<T>(Action<T> messageConstructor, ExecutionContext executionContext, ILogger functionsLogger = null)
+        {
+            await InitializeEndpointUsedOutsideHandlerIfNecessary(executionContext, functionsLogger).ConfigureAwait(false);
+
+            await endpoint.Publish(messageConstructor).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task Subscribe(Type eventType, SubscribeOptions options, ExecutionContext executionContext, ILogger functionsLogger = null)
+        {
+            await InitializeEndpointUsedOutsideHandlerIfNecessary(executionContext, functionsLogger).ConfigureAwait(false);
+
+            await endpoint.Subscribe(eventType, options).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task Subscribe(Type eventType, ExecutionContext executionContext, ILogger functionsLogger = null)
+        {
+            await InitializeEndpointUsedOutsideHandlerIfNecessary(executionContext, functionsLogger).ConfigureAwait(false);
+
+            await endpoint.Subscribe(eventType).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task Unsubscribe(Type eventType, UnsubscribeOptions options, ExecutionContext executionContext, ILogger functionsLogger = null)
+        {
+            await InitializeEndpointUsedOutsideHandlerIfNecessary(executionContext, functionsLogger).ConfigureAwait(false);
+
+            await endpoint.Unsubscribe(eventType, options).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task Unsubscribe(Type eventType, ExecutionContext executionContext, ILogger functionsLogger = null)
+        {
+            await InitializeEndpointUsedOutsideHandlerIfNecessary(executionContext, functionsLogger).ConfigureAwait(false);
+
+            await endpoint.Unsubscribe(eventType).ConfigureAwait(false);
+        }
+
+        private async Task InitializeEndpointUsedOutsideHandlerIfNecessary(ExecutionContext executionContext, ILogger functionsLogger)
+        {
+            FunctionsLoggerFactory.Instance.SetCurrentLogger(functionsLogger);
+
+            var functionExecutionContext = new FunctionExecutionContext(executionContext, functionsLogger);
+
+            await InitializeEndpointIfNecessary(functionExecutionContext).ConfigureAwait(false);
         }
 
         internal static void LoadAssemblies(string assemblyDirectory)
@@ -186,9 +287,10 @@
         protected Func<FunctionExecutionContext, string> AssemblyDirectoryResolver = functionExecutionContext => Path.Combine(functionExecutionContext.ExecutionContext.FunctionAppDirectory, "bin");
 
         readonly SemaphoreSlim semaphoreLock = new SemaphoreSlim(initialCount: 1, maxCount: 1);
-        Func<FunctionExecutionContext, Task<IEndpointInstance>> endpointFactory;
-        StorageQueueTriggeredEndpointConfiguration configuration;
-        PipelineInvoker pipeline;
+        private Func<FunctionExecutionContext, Task<IEndpointInstance>> endpointFactory;
+        private StorageQueueTriggeredEndpointConfiguration configuration;
+        private PipelineInvoker pipeline;
+        private IEndpointInstance endpoint;
 
         static readonly global::Newtonsoft.Json.JsonSerializer JsonSerializer = new global::Newtonsoft.Json.JsonSerializer();
     }
