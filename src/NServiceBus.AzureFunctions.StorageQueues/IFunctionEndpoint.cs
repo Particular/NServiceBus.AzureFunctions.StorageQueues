@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace NServiceBus
+﻿namespace NServiceBus
 {
+    using System;
     using System.Threading.Tasks;
     using Microsoft.Azure.WebJobs;
     using Microsoft.Extensions.Logging;

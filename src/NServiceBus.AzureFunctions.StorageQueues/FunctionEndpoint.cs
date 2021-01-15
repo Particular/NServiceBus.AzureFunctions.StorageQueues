@@ -216,7 +216,7 @@
             await endpoint.Unsubscribe(eventType).ConfigureAwait(false);
         }
 
-        private async Task InitializeEndpointUsedOutsideHandlerIfNecessary(ExecutionContext executionContext, ILogger functionsLogger)
+        async Task InitializeEndpointUsedOutsideHandlerIfNecessary(ExecutionContext executionContext, ILogger functionsLogger)
         {
             FunctionsLoggerFactory.Instance.SetCurrentLogger(functionsLogger);
 
@@ -287,10 +287,10 @@
         protected Func<FunctionExecutionContext, string> AssemblyDirectoryResolver = functionExecutionContext => Path.Combine(functionExecutionContext.ExecutionContext.FunctionAppDirectory, "bin");
 
         readonly SemaphoreSlim semaphoreLock = new SemaphoreSlim(initialCount: 1, maxCount: 1);
-        private Func<FunctionExecutionContext, Task<IEndpointInstance>> endpointFactory;
-        private StorageQueueTriggeredEndpointConfiguration configuration;
-        private PipelineInvoker pipeline;
-        private IEndpointInstance endpoint;
+        Func<FunctionExecutionContext, Task<IEndpointInstance>> endpointFactory;
+        StorageQueueTriggeredEndpointConfiguration configuration;
+        PipelineInvoker pipeline;
+        IEndpointInstance endpoint;
 
         static readonly global::Newtonsoft.Json.JsonSerializer JsonSerializer = new global::Newtonsoft.Json.JsonSerializer();
     }

@@ -41,7 +41,7 @@
 
         public IList<object> Messages { get; } = new List<object>();
 
-        public Action<StorageQueueTriggeredEndpointConfiguration> CustomizeConfiguration { private get; set; } = (_ => { });
+        public Action<StorageQueueTriggeredEndpointConfiguration> CustomizeConfiguration { private get; set; } = _ => { };
 
 
         class FunctionRunner : ComponentRunner
@@ -56,7 +56,7 @@
                 this.configurationCustomization = configurationCustomization;
                 this.scenarioContext = scenarioContext;
                 this.functionComponentType = functionComponentType;
-                this.Name = functionComponentType.FullName;
+                Name = functionComponentType.FullName;
 
                 var serializer = new NewtonsoftSerializer();
                 messageSerializer = serializer.Configure(new SettingsHolder())(new MessageMapper());
@@ -134,7 +134,7 @@
                     messageWrapper.Body = stream.ToArray();
                 }
 
-                messageWrapper.Headers = new Dictionary<string, string> {{"NServiceBus.EnclosedMessageTypes", message.GetType().FullName}};
+                messageWrapper.Headers = new Dictionary<string, string> { { "NServiceBus.EnclosedMessageTypes", message.GetType().FullName } };
 
                 var cloudQueueMessage = new CloudQueueMessage(JsonConvert.SerializeObject(messageWrapper));
                 var dequeueCountProperty = typeof(CloudQueueMessage).GetProperty("DequeueCount");

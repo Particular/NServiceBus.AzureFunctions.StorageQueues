@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace StorageQueues.Tests
+﻿namespace StorageQueues.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -11,6 +9,7 @@ namespace StorageQueues.Tests
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Azure.WebJobs;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.WindowsAzure.Storage.Queue;
     using Newtonsoft.Json;
     using NServiceBus;
@@ -104,9 +103,11 @@ namespace StorageQueues.Tests
 
         CloudQueueMessage GenerateMessage()
         {
-            var messageWrapper = new MessageWrapper();
-            messageWrapper.Body = Encoding.UTF8.GetBytes("<DummyMessage/>");
-            messageWrapper.Headers = new Dictionary<string, string> { { "NServiceBus.EnclosedMessageTypes", "Testing.Handlers.DummyMessage" } };
+            var messageWrapper = new MessageWrapper
+            {
+                Body = Encoding.UTF8.GetBytes("<DummyMessage/>"),
+                Headers = new Dictionary<string, string> { { "NServiceBus.EnclosedMessageTypes", "Testing.Handlers.DummyMessage" } }
+            };
 
             var message = new CloudQueueMessage(JsonConvert.SerializeObject(messageWrapper));
             return message;
