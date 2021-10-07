@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GitHubActionsTestLogger" Version="1.2.0" />
     <PackageReference Include="NServiceBus" Version="7.5.0" />
   </ItemGroup>
 
