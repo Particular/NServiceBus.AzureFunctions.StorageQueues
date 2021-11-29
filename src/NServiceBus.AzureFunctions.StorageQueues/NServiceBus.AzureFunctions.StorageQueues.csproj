@@ -12,7 +12,7 @@
     <PackageReference Include="NServiceBus.Azure.Transports.WindowsAzureStorageQueues" Version="8.2.5" />
     <PackageReference Include="NServiceBus.Extensions.DependencyInjection" Version="1.0.1" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="5.0.0" />
-    <PackageReference Include="Particular.Packaging" Version="1.3.0" PrivateAssets="All" />
+    <PackageReference Include="Particular.Packaging" Version="1.4.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Label="Required to force NServiceBus 7.2 and later to be able to disable publishing. ASQ transport is configured to use Core [7.1.6, 8) but NuGet doesn't resolve the latest. Remove when ASQ is updated">
